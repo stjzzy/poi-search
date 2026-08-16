@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F7FA"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- 顶部标题卡片 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1565C0"
+            android:padding="24dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="在线获取激活码"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:gravity="center"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tv_app_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="应用名称"
+                android:textSize="14sp"
+                android:textColor="#BFDBFE"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <!-- 表单卡片 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#FFFFFF"
+            android:padding="20dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="填写购买信息"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="#1E3A5F"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="您的机器码（自动填写）"
+                android:textSize="13sp"
+                android:textColor="#6B7280"
+                android:layout_marginBottom="6dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:id="@+id/tv_machine_id"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="读取中..."
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="#1E3A5F"
+                    android:background="#EFF6FF"
+                    android:padding="12dp"/>
+
+                <Button
+                    android:id="@+id/btn_copy_machine_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="复制"
+                    android:textSize="13sp"
+                    android:background="#E0E7FF"
+                    android:textColor="#3730A3"
+                    android:layout_marginStart="8dp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="手机号 *"
+                android:textSize="13sp"
+                android:textColor="#6B7280"
+                android:layout_marginBottom="6dp"/>
+
+            <EditText
+                android:id="@+id/et_phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="请输入您的手机号"
+                android:inputType="phone"
+                android:maxLength="11"
+                android:background="#F9FAFB"
+                android:padding="14dp"
+                android:textSize="15sp"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="邀请码（有邀请码优惠，可不填）"
+                android:textSize="13sp"
+                android:textColor="#6B7280"
+                android:layout_marginBottom="6dp"/>
+
+            <EditText
+                android:id="@+id/et_referral_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:background="#F9FAFB"
+                android:hint="填写邀请码享优惠价"
+                android:padding="14dp"
+                android:singleLine="true"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="#FEF3C7"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:minLines="2"
+                    android:maxLines="3"
+                    android:lineSpacingExtra="4dp"
+                    android:ellipsize="end"
+                    android:text="无邀请码：￥200\n有邀请码：￥180（省20元）"
+                    android:textColor="#92400E"
+                    android:textSize="14sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical|end"
+                    android:layout_marginStart="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="应付金额"
+                        android:textSize="12sp"
+                        android:textColor="#92400E" />
+
+                    <TextView
+                        android:id="@+id/tv_price_display"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="¥200"
+                        android:textSize="28sp"
+                        android:textStyle="bold"
+                        android:textColor="#DC2626" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_submit"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="立即支付 获取激活码"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:background="#1565C0"/>
+        </LinearLayout>
+
+        <!-- 支付结果卡片（初始隐藏） -->
+        <LinearLayout
+            android:id="@+id/layout_result"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#FFFFFF"
+            android:padding="20dp"
+            android:layout_marginBottom="16dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="提交成功！"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#059669"
+                android:gravity="center"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tv_order_no"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="13sp"
+                android:textColor="#6B7280"
+                android:gravity="center"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="微信扫码支付"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="#1E3A5F"
+                android:gravity="center"
+                android:layout_marginBottom="12dp"/>
+
+            <ImageView
+                android:id="@+id/iv_qr_code"
+                android:layout_width="240dp"
+                android:layout_height="240dp"
+                android:layout_gravity="center"
+                android:scaleType="centerInside"
+                android:background="#F3F4F6"
+                android:padding="8dp"
+                android:layout_marginBottom="12dp"/>
+
+            <Button
+                android:id="@+id/btn_save_qr"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="保存二维码到相册"
+                android:textSize="15sp"
+                android:textColor="#1D4ED8"
+                android:background="#DBEAFE"
+                android:layout_marginBottom="16dp"/>
+
+            <LinearLayout
+                android:id="@+id/layout_wechat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#FEF2F2"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="支付后请加客服微信获取激活码"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:textColor="#991B1B"
+                    android:gravity="center"
+                    android:layout_marginBottom="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="客服微信："
+                        android:textSize="16sp"
+                        android:textColor="#7F1D1D"/>
+
+                    <TextView
+                        android:id="@+id/tv_wechat_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="#DC2626"
+                        android:layout_marginEnd="8dp"/>
+
+                    <Button
+                        android:id="@+id/btn_copy_wechat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="复制"
+                        android:textSize="13sp"
+                        android:background="#FCA5A5"
+                        android:textColor="#7F1D1D"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="请告知您的手机号，客服核实后发送激活码"
+                    android:textSize="12sp"
+                    android:textColor="#B91C1C"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
