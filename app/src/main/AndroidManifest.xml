@@ -13,6 +13,7 @@
         android:maxSdkVersion="28" />
 
     <application
+        android:name=".PoiApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -61,7 +62,18 @@
         <activity
             android:name=".OfflineMapActivity"
             android:label="离线地图" />
-        
+
+        <!-- 一机一码授权：激活页 / 在线购买页 -->
+        <activity
+            android:name=".ActivationActivity"
+            android:label="设备激活"
+            android:exported="false" />
+
+        <activity
+            android:name=".OnlinePurchaseActivity"
+            android:label="在线购买"
+            android:exported="false" />
+
         <!-- FileProvider for sharing Excel files -->
         <provider
             android:name="androidx.core.content.FileProvider"
