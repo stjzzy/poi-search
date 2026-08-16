@@ -46,6 +46,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.graphics.Bitmap;
+import android.view.Menu;
+import android.view.MenuItem;
+
+import com.example.poisearch.license.ReferralSystem;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
@@ -453,6 +459,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_activate) {
+            startActivity(new Intent(this, ActivationActivity.class));
+            return true;
+        } else if (id == R.id.menu_purchase) {
+            startActivity(new Intent(this, OnlinePurchaseActivity.class));
+            return true;
+        } else if (id == R.id.menu_share_poster) {
+            Bitmap poster = ReferralSystem.onShare(this);
+            ReferralSystem.sharePoster(this, poster);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
