@@ -1,0 +1,35 @@
+# Gradle files
+.gradle/
+build/
+
+# Local configuration file
+local.properties
+
+# Android Studio
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# WorkBuddy files
+.workbuddy/
+
+# Excel files (generated)
+github_trending_*.xlsx
+
+# Gradle wrapper (keep properties, ignore jar)
+gradle/wrapper/gradle-wrapper.jar
+
+# Build outputs
+app/build/
+*.apk
+*.aab
+
+# Captures
+captures/
+
+# External native build folder
+.externalNativeBuild
+.cxx/
