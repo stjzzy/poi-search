@@ -38,11 +38,27 @@
 - 🎨 Material Design 风格界面
 - 🔐 定位权限（精确定位 + 粗略定位）
 
+### 一机一码授权（`license/` 包）🔐
+- 离线「设备绑定」激活：**机器码 = MD5(AndroidId) 前12位**，格式 `XXXX-XXXX-XXXX`
+- **激活码 = MD5(机器码 + 应用专属盐) 前12位**，同设备不同应用注册码不同
+- `LicenseGate` 全局 Activity 门禁：未激活时除「激活页 / 购买页」外一律跳转激活页（在 `PoiApplication` 注册 `registerActivityLifecycleCallbacks`）
+- `ActivationActivity`：展示机器码、录入激活码、复制、错误抖动
+- 开发者端算码：`scripts/gen_code.py "用户机器码" --app "附近POI搜索"`（需 `fission-marketing-and-license` 技能脚本）
+
+### 裂变营销系统
+- `ReferralSystem`：邀请码 = 机器码；合成可换二维码的分享海报（保存到相册 / 系统分享）
+- `OnlinePurchaseActivity`：在线购买页，填推荐码享优惠价（有码 ¥180 / 无码 ¥200），提交麦客表单并回显微信支付二维码
+- `FissionReporter`：上报 `share` / `purchase` 事件到自有服务端（`LicenseConfig.FISSION_REPORT_URL`，留空则跳过）
+- 入口：主界面右上角「⋮」菜单 → 设备激活 / 在线购买激活码 / 分享海报(裂变)
+
 ## 项目结构
 
 ```
 app/src/main/java/com/example/poisearch/
 ├── MainActivity.java              # 主界面（搜索框/分类/范围/位置/导出入口）
+├── PoiApplication.java            # 自定义 Application，注册授权门禁
+├── ActivationActivity.java        # 设备激活页（一机一码）
+├── OnlinePurchaseActivity.java    # 在线购买激活码页（裂变优惠）
 ├── AMapActivity.java              # 地图展示
 ├── RouteActivity.java             # 路线规划（驾车/步行/骑行 + 分段步骤）
 ├── OfflineMapActivity.java        # 离线地图下载（24 城市）
@@ -76,6 +92,12 @@ app/src/main/java/com/example/poisearch/
 │   └── ExportSettingsDialog.java   # 导出设置
 └── utils/
     └── ExcelExporter.java          # Excel 导出（Apache POI）
+└── license/                       # 一机一码授权 + 裂变营销（fission-marketing-and-license 技能）
+    ├── LicenseConfig.java         # per-app 配置（盐 / APP_ID / 海报 / 支付 / 价格）
+    ├── LicenseValidator.java      # 机器码计算 + 激活码校验 + 持久化
+    ├── LicenseGate.java           # 全局 Activity 门禁（未激活拦截）
+    ├── FissionReporter.java       # 上报 share / purchase 事件
+    └── ReferralSystem.java        # 邀请码 / 海报合成 / 分享 / 跳转支付
 
 app/src/main/res/layout/
 ├── activity_main.xml / activity_amap.xml / activity_route.xml
