@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">附近POI搜索</string>
+    <string name="search_hint">搜索附近地点...</string>
+    <string name="search_button">搜索</string>
+    <string name="nearby_poi">附近兴趣点</string>
+    <string name="no_results">正在搜索附近地点...</string>
+    <string name="loading">正在搜索...</string>
+    <string name="location_error">无法获取位置信息</string>
+    <string name="permission_denied">需要位置权限才能搜索附近地点</string>
+    <string name="distance_format">%.1f 米</string>
+    <string name="address">地址: %s</string>
+    <string name="phone">电话: %s</string>
+    <string name="rating">评分: %.1f</string>
+</resources>
