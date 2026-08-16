@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 应用外部文件目录 -->
+    <external-files-path name="documents" path="Documents/" />
+    <external-files-path name="poi_export" path="Documents/POI导出/" />
+    
+    <!-- 外部存储根目录 -->
+    <external-path name="external_root" path="." />
+    <external-path name="external_poi" path="POI导出/" />
+    
+    <!-- 下载目录 -->
+    <external-path name="downloads" path="Download/" />
+    
+    <!-- 应用私有目录 -->
+    <files-path name="internal_files" path="." />
+    <cache-path name="cache" path="." />
+</paths>
