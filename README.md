@@ -1,219 +1,156 @@
-# 附近POI搜索安卓应用
+# 附近 POI 搜索安卓应用（poi-search）
 
-一个功能完整的Android应用程序，用于搜索附近的兴趣点（POI）。
+一个基于**高德地图（AMap）真实数据**的 Android 应用，用于按关键词 / 分类 / 范围搜索周边兴趣点（POI），并支持地图展示、网格化海量抓取、路线规划、离线地图、收藏、历史与 Excel 导出。
+
+> ⚠️ 说明：高德 Web 服务 Key **硬编码**在 `app/src/main/java/com/example/poisearch/service/POISearchService.java`（`AMAP_KEY` 常量）。如需自行替换，直接改该常量即可，无需配置界面。
 
 ## 功能特点
 
-### 核心功能
-- 📍 **定位功能**: 自动获取当前位置，搜索附近POI
-- 🔍 **关键词搜索**: 支持按名称搜索地点
-- 🏷️ **完整分类系统**: 支持20+大类、200+子分类的POI分类浏览
+### 核心搜索
+- 🔍 **关键词搜索**：调用高德 `v3/place/text` 接口，按名称搜索
+- 📍 **周边搜索**：调用高德 `v3/place/around` 接口，以某点为圆心搜索
+- 🔲 **网格分片搜索**（`GridSearchService`）：将大范围切成 **800 米**小网格逐一搜索再合并去重，**突破高德单接口最多 200 条的限制**，适合大半径（最高 50km）的海量抓取
+- 🏷️ **分类体系**（`POICategory`）：20+ 大类、200+ 子类，配独立分类图标
 
-### 地图导航
-- 🗺️ **地图展示**: Google Maps集成，直观展示所有POI位置
-- 📍 **搜索范围圈**: 在地图上显示搜索范围圆圈
-- 🎨 **距离颜色标记**: 
-  - 🟢 绿色: < 500米
-  - 🟡 黄色: 500-1500米
-  - 🔴 红色: > 1500米
-- 🔍 **缩放控制**: 根据搜索范围自动调整地图缩放级别
+### 地图展示（`AMapActivity`）
+- 🗺️ 高德地图（3D Map SDK）展示所有 POI
+- 🎨 距离颜色标记：🟢 <500m / 🟡 500–1500m / 🔴 >1500m
+- ⭕ 搜索范围圈 + 自动缩放到合适级别
+- 📍 点击标记查看详情，支持自定义搜索中心（当前定位或手动经纬度）
 
-### 搜索范围
-- 📏 **可调节范围**: 默认10公里，支持500米 - 50公里
-- 🎯 **快速预设**: 500米、1公里、2公里、5公里、10公里、20公里、50公里
-- 📊 **滑块调整**: 精确调整搜索范围
+### 路线规划（`RouteActivity`）✅
+- 🚗 三种出行方式：**驾车 / 步行 / 骑行**（切换调用高德 `v3/direction`）
+- 🧭 地图绘制路线 polyline + 起点/终点标记
+- 📋 **分段导航步骤**列表（`RouteStep` + `RouteStepAdapter`）
+- 📲 一键「打开高德 APP 导航」，未安装则降级到网页版高德
+- 终点为所选 POI，起点为全局当前定位
 
-### 自定义定位
-- 📍 **当前位置**: 使用GPS定位当前位置
-- 📝 **自定义坐标**: 手动输入经纬度设定搜索中心
-- 🏷️ **位置命名**: 为自定义位置添加名称
+### 离线地图（`OfflineMapActivity`）
+- 📥 内置 **24 个热门城市**列表，下载/管理高德离线地图包
 
-### 数据导出
-- 📊 **Excel导出**: 将搜索结果导出为Excel文件(.xlsx)
-- 📋 **完整信息**: 包含名称、类别、地址、电话、坐标、距离、评分
-- 📤 **文件分享**: 支持通过邮件、微信等方式分享Excel文件
-- 💾 **自动保存**: 文件保存到Documents/POI导出目录
+### 数据管理与导出
+- ⭐ **收藏**（`FavoriteActivity` + `FavoriteManager`，SQLite）
+- 🕘 **搜索历史**（`HistoryActivity` + `HistoryManager`，SQLite）
+- 📊 **Excel 导出**（`ExcelExporter`，Apache POI）：名称 / 类别 / 地址 / 电话 / 坐标 / 距离 / 评分，可分享
 
-### 其他功能
-- 📞 **一键拨号**: 点击电话号码直接拨打
-- 🎨 **分类图标**: 每个分类都有独特的图标标识
-- 📱 **Material Design**: 采用Material Design 3设计风格
+### 其他
+- 📞 列表/详情一键拨号
+- 🎨 Material Design 风格界面
+- 🔐 定位权限（精确定位 + 粗略定位）
 
 ## 项目结构
 
 ```
 app/src/main/java/com/example/poisearch/
-├── MainActivity.java              # 主界面
+├── MainActivity.java              # 主界面（搜索框/分类/范围/位置/导出入口）
+├── AMapActivity.java              # 地图展示
+├── RouteActivity.java             # 路线规划（驾车/步行/骑行 + 分段步骤）
+├── OfflineMapActivity.java        # 离线地图下载（24 城市）
+├── POIDetailActivity.java         # POI 详情
+├── FavoriteActivity.java          # 收藏列表
+├── HistoryActivity.java           # 搜索历史
+├── POIDataHolder.java             # 全局 POI / 当前位置持有
 ├── model/
-│   ├── POI.java                  # POI数据模型
-│   └── POICategory.java          # POI分类模型（20+大类，200+子类）
+│   ├── POI.java                   # POI 数据模型
+│   ├── POICategory.java           # 分类模型
+│   ├── RouteStep.java             # 路线分段步骤
+│   └── SearchHistory.java         # 历史记录模型
 ├── service/
-│   └── POISearchService.java     # POI搜索服务
+│   ├── POISearchService.java      # 关键词/周边搜索（高德 Web API）
+│   └── GridSearchService.java     # 网格分片搜索（突破 200 条限制）
 ├── adapter/
-│   └── POIAdapter.java           # POI列表适配器
-└── dialog/
-    ├── CategoryDialog.java       # 分类选择对话框
-    └── CategoryDetailDialog.java # 子分类详情对话框
+│   ├── POIAdapter.java            # 搜索结果列表
+│   ├── RouteStepAdapter.java      # 路线分段步骤
+│   ├── HistoryAdapter.java        # 历史列表
+│   ├── OfflineCityAdapter.java    # 离线地图城市
+│   └── SimpleCityAdapter.java     # 通用城市列表
+├── database/
+│   ├── DatabaseHelper.java         # SQLite 辅助
+│   ├── FavoriteManager.java        # 收藏管理
+│   └── HistoryManager.java         # 历史管理
+├── dialog/
+│   ├── CategoryDialog.java         # 分类选择
+│   ├── CategoryDetailDialog.java   # 子分类选择
+│   ├── RadiusDialog.java           # 搜索范围（0.5–50km）
+│   ├── LocationDialog.java         # 定位/自定义坐标
+│   └── ExportSettingsDialog.java   # 导出设置
+└── utils/
+    └── ExcelExporter.java          # Excel 导出（Apache POI）
 
-app/src/main/res/
-├── layout/
-│   ├── activity_main.xml         # 主界面布局
-│   ├── item_poi.xml              # POI列表项布局
-│   ├── dialog_category.xml       # 分类选择对话框
-│   ├── dialog_category_detail.xml # 子分类详情对话框
-│   └── item_category_grid.xml    # 分类网格项
-├── values/
-│   ├── strings.xml               # 字符串资源
-│   ├── colors.xml                # 颜色资源
-│   └── themes.xml                # 主题样式
-└── drawable/
-    ├── circle_background.xml     # 圆形背景
-    ├── dialog_background.xml     # 对话框背景
-    ├── category_icon_background.xml # 分类图标背景
-    ├── ic_launcher_foreground.xml # 应用图标
-    └── ic_category_*.xml         # 各类分类图标（20个）
+app/src/main/res/layout/
+├── activity_main.xml / activity_amap.xml / activity_route.xml
+├── activity_offline_map.xml / activity_favorite.xml / activity_history.xml
+├── item_poi.xml / item_route_step.xml / item_history.xml
+└── dialog_*.xml / item_category_*.xml
 ```
 
 ## 技术栈
 
-- **开发语言**: Java
-- **最低SDK**: Android 7.0 (API 24)
-- **目标SDK**: Android 14 (API 34)
-- **网络请求**: Volley
-- **JSON解析**: Gson
-- **定位服务**: Google Play Services Location
-- **地图服务**: Google Play Services Maps
-- **Excel导出**: Apache POI
-- **UI组件**: Material Design 3
+- **语言**：Java
+- **最低 SDK**：Android 8.0（API 26）
+- **目标 / 编译 SDK**：Android 14（API 34）
+- **地图**：高德 Android 3D Map SDK `com.amap.api:3dmap:10.0.600`
+- **网络**：Volley（`com.android.volley:volley:1.2.1`）
+- **JSON**：Gson（`com.google.code.gson:gson:2.10.1`）
+- **Excel 导出**：Apache POI 5.2.3（`poi` + `poi-ooxml`）
+- **UI**：AndroidX（AppCompat / RecyclerView / CardView / ConstraintLayout / CoordinatorLayout），Material Design
 
-## 配置说明
+## 权限
 
-### 1. 高德地图API配置（可选）
+- `INTERNET` — 访问高德网络服务
+- `ACCESS_FINE_LOCATION` / `ACCESS_COARSE_LOCATION` — 定位
+- `ACCESS_NETWORK_STATE` — 网络状态
+- `CALL_PHONE` — 一键拨号
+- `WRITE_EXTERNAL_STORAGE` / `READ_EXTERNAL_STORAGE` — 导出 Excel（旧版 Android）
 
-默认使用模拟数据。如需接入真实POI数据：
+## 构建与运行
 
-1. 前往 [高德地图开放平台](https://lbs.amap.com/) 注册并创建应用
-2. 获取Web服务API Key
-3. 修改 `POISearchService.java` 中的 `AMAP_KEY` 常量
-4. 将 `USE_MOCK_DATA` 设置为 `false`
+### 环境要求
+- Android Studio（Hedgehog 及以上）或命令行 + JDK 17
+- Android SDK Platform 34、Build-Tools 34.0.0
+- 高德 3D Map SDK 需要 `AndroidManifest.xml` 中配置 `com.amap.api.v2.apikey` meta-data
 
-```java
-private static final String AMAP_KEY = "你的高德地图API Key";
-private static final boolean USE_MOCK_DATA = false;
-```
-
-### 2. Google Maps API配置
-
-如需使用地图功能：
-
-1. 前往 [Google Cloud Console](https://console.cloud.google.com/) 创建项目
-2. 启用 Google Maps Android API
-3. 创建API密钥
-4. 在 `AndroidManifest.xml` 中替换 `YOUR_GOOGLE_MAPS_API_KEY`：
-
-```xml
-<meta-data
-    android:name="com.google.android.geo.API_KEY"
-    android:value="你的Google Maps API Key" />
-```
-
-### 3. 权限说明
-
-应用需要以下权限：
-- `INTERNET` - 网络访问
-- `ACCESS_FINE_LOCATION` - 精确定位
-- `ACCESS_COARSE_LOCATION` - 粗略定位
-- `ACCESS_NETWORK_STATE` - 网络状态
-- `WRITE_EXTERNAL_STORAGE` - 导出Excel文件（Android 9及以下）
-- `READ_EXTERNAL_STORAGE` - 读取文件（Android 9及以下）
-
-## 构建和运行
-
-### 使用Android Studio
-
-1. 打开项目文件夹
-2. 等待Gradle同步完成
-3. 连接设备或启动模拟器
-4. 点击运行按钮
-
-### 使用命令行
+### 命令行构建
 
 ```bash
-# 构建Debug版本
-./gradlew assembleDebug
+# 构建 Release（默认未配置签名，可用 debug keystore 对齐签名后安装）
+./gradlew assembleRelease
 
-# 安装到设备
-adb install app/build/outputs/apk/debug/app-debug.apk
+# 构建并安装 Debug
+./gradlew assembleDebug
+adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
+
+> ⚠️ `build.gradle` 当前 **release 未配置 signingConfig**。本地自测可用 debug keystore 对齐签名：
+> ```bash
+> $ANDROID_HOME/build-tools/<ver>/zipalign -p 4 \
+>   app/build/outputs/apk/release/app-release-unsigned.apk aligned.apk
+> $ANDROID_HOME/build-tools/<ver>/apksigner sign \
+>   --ks ~/.android/debug.keystore --ks-key-alias androiddebugkey \
+>   --ks-pass pass:android --key-pass pass:android --out poi-release.apk aligned.apk
+> ```
+
+### 替换高德 Key
+编辑 `app/src/main/java/com/example/poisearch/service/POISearchService.java`：
+```java
+private static final String AMAP_KEY = "你的高德Web服务Key";
+```
+并在 `AndroidManifest.xml` 中同步地图 SDK 的 `com.amap.api.v2.apikey`。
 
 ## 使用说明
 
-### 基本搜索
-1. 首次启动时会请求位置权限，请允许以获取附近POI
-2. 在搜索框输入关键词，点击搜索按钮或按回车键
-3. 点击"选择分类"按钮打开分类选择对话框
-4. 选择主分类后，可以进一步选择子分类（如：餐饮 → 火锅店）
+1. **首次启动**允许定位权限，首页会显示当前经纬度与地址
+2. **搜索**：输入关键词或选分类 → 调范围（0.5–50km）→ 点搜索；大范围建议开启网格搜索以突破 200 条上限
+3. **地图**：搜索后点「地图」查看 POI 分布与距离色标
+4. **路线**：在 POI 详情/列表点「导航」→ 选择驾车/步行/骑行 → 看分段步骤 → 点「打开高德」唤起 APP 导航（未装降级网页版）
+5. **离线地图**：下载常用城市离线包
+6. **收藏 / 历史**：长按或列表操作收藏；历史自动记录
+7. **导出 Excel**：导出搜索结果，可分享或存入 Documents
 
-### 调整搜索范围
-1. 点击"范围"按钮打开范围选择对话框
-2. 使用滑块调整范围（0.5 - 50公里）
-3. 或点击预设按钮快速选择
-4. 默认范围为10公里
+## 与原 README 的差异（已纠正）
 
-### 自定义搜索位置
-1. 点击"位置"按钮打开位置设置对话框
-2. 选择"使用当前位置"或"自定义位置"
-3. 自定义位置时输入经纬度坐标
-4. 可以为位置添加名称便于识别
-
-### 地图导航
-1. 搜索完成后，点击"地图导航"按钮
-2. 在地图上查看所有POI位置
-3. 不同颜色标记表示不同距离
-4. 蓝色圆圈表示搜索范围
-5. 点击标记查看POI详情
-
-### 导出Excel
-1. 搜索完成后，点击"导出Excel"按钮
-2. 等待导出完成
-3. 可选择直接分享文件
-4. 文件保存在 Documents/POI导出/ 目录
-
-### 其他操作
-- 点击列表项查看详情
-- 点击电话号码可直接拨打
-- 点击地址可调用地图导航
-
-## 模拟数据
-
-应用默认使用模拟数据，包含45+个真实POI，覆盖以下分类：
-
-| 分类 | 示例POI |
-|------|---------|
-| 🍽️ 餐饮 | 肯德基、麦当劳、星巴克、全聚德、海底捞、必胜客、喜茶、东来顺等 |
-| 🛍️ 购物 | 万达广场、沃尔玛、7-Eleven、苏宁易购、ZARA、屈臣氏、新华书店等 |
-| 🛎️ 生活服务 | 顺丰快递、洗衣店、家政服务、房屋中介等 |
-| ⚽ 体育休闲 | 健身房、电影院、KTV、游泳馆、羽毛球馆、公园、酒吧等 |
-| 🏥 医疗 | 协和医院、同仁堂药店、口腔医院、社区卫生服务中心等 |
-| 🏨 酒店 | 如家、汉庭、希尔顿、7天等 |
-| 🏞️ 景点 | 故宫、天坛公园、雍和宫等 |
-| 🚗 交通 | 地铁站、公交站、加油站、停车场等 |
-| 💰 金融 | 建设银行、工商银行、ATM、中信证券等 |
-| 🎓 教育 | 北京大学、人大附中、新东方、国家图书馆等 |
-| 🏢 企业 | 腾讯北京、百度大厦等 |
-| 🏛️ 公共设施 | 公共厕所、充电桩等 |
-
-所有POI都带有真实的地址、电话、评分和距离信息。
-
-## 后续优化建议
-
-- 接入真实地图API获取实时POI数据
-- 添加地图展示界面
-- 实现POI详情页面
-- 添加收藏功能
-- 支持历史记录
-- 添加路线规划功能
-- 支持离线地图
+- 旧版称「使用 Google Maps + 模拟数据」——**错误**。实际全程为**高德地图真实数据**，无模拟数据分支。
+- 旧版「后续优化建议」中的地图/详情/收藏/历史/路线规划/离线地图，均已实现，不再属于待办。
 
 ## 许可证
 
